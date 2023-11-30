@@ -3,21 +3,24 @@ import axios from 'axios'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+
 const Home = () => {
-    const[movies,setMovies] = useState([])
+    const [movies, setMovies] = useState([])
     useEffect(() => {
-        const fetchMovies = async() => {
+        const fetchMovies = async () => {
             try {
-                const response = await axios.get('api/getPopularMovies');
+                const response = await axios.get('api/getPopularMovies')
                 // console.log(response.data.results);
-                setMovies(response.data.results);
-                console.log(movies);
+                setMovies(response.data.results)
+                console.log(movies)
             } catch (error) {
-                console.log(err);
+                console.log(err)
             }
         }
-        fetchMovies();
-    },[])
+        fetchMovies()
+    }, [])
     return (
         <AppLayout
             header={
@@ -28,12 +31,22 @@ const Home = () => {
             <Head>
                 <title>Laravel - Home</title>
             </Head>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {movies.map((movie, index) => (
-                    <img key={index} src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+            <Swiper
+                spaceBetween={50}
+                slidesPerView={5}
+                onSlideChange={() => console.log('slide change')}
+                onSwiper={swiper => console.log(swiper)}>
+                {movies.map(movie => (
+                    <SwiperSlide>
+                        <img
+                            key={movie.id}
+                            src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                            alt={movie.title}
+                        />
+                    </SwiperSlide>
                 ))}
-            </div>
+            </Swiper>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </AppLayout>
     )
 }
