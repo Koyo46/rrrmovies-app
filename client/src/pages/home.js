@@ -29,6 +29,11 @@ const Home = () => {
                 <title>Laravel - Home</title>
             </Head>
 
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {movies.map((movie, index) => (
+                    <img key={index} src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+                ))}
+            </div>
         </AppLayout>
     )
 }
