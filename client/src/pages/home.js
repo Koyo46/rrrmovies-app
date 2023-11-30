@@ -3,7 +3,7 @@ import axios from 'axios'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 
-const Dashboard = () => {
+const Home = () => {
     const[movies,setMovies] = useState([])
     useEffect(() => {
         const fetchMovies = async() => {
@@ -26,11 +26,11 @@ const Dashboard = () => {
                 </h2>
             }>
             <Head>
-                <title>Laravel - Dashboard</title>
+                <title>Laravel - Home</title>
             </Head>
 
         </AppLayout>
     )
 }
 
-export default Dashboard
+export default Home
