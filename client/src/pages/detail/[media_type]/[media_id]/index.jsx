@@ -78,16 +78,20 @@ export async function getServerSideProps(context) {
     const { media_type, media_id } = context.params
 
     try {
-        console.log(process.env.TMDB_API_KEY)
-        const res = await axios.get(
+        const jpRes = await axios.get(
             `https://api.themoviedb.org/3/${media_type}/${media_id}?api_key=${process.env.TMDB_API_KEY}&language=ja-JP`,
         )
-        process.env.TMDB_API_KEY
-        const fetchData = res.data
+        let combinedData = { ...jpRes.data }
+        if (!jpRes.data.overview) {
+            const enRes = await axios.get(
+                `https://api.themoviedb.org/3/${media_type}/${media_id}?api_key=${process.env.TMDB_API_KEY}&language=en-US`,
+            )
+            combinedData.overview = enRes.data.overview
+        }
 
         return {
             props: {
-                detailData: fetchData,
+                detailData: combinedData,
             },
         }
     } catch {
