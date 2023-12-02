@@ -1,4 +1,4 @@
-import { Box, Container, Grid } from '@mui/material'
+import { Box, Container, Grid, Typography } from '@mui/material'
 import axios from 'axios'
 import React from 'react'
 
@@ -8,9 +8,17 @@ const Detail = ({ detailData }) => {
     return (
         <Box
             sx={{
-                height: '70vh',
+                height: {
+                    xs: 'auto',
+                    sm: 'auto',
+                    md: 'auto',
+                    lg: 'auto',
+                    xl: '70vh',
+                },
                 bgcolor: 'red',
                 position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
             }}>
             <Box
                 sx={{
@@ -34,14 +42,33 @@ const Detail = ({ detailData }) => {
                         background: 'rgba(0,0,0,0.5)',
                         backdropFilter: 'blur(10px)',
                     },
-                }}>
-                <Container>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={6}></Grid>
-                        <Grid item xs={12} md={6}></Grid>
+                }}></Box>
+            <Container sx={{ zIndex: 1 }}>
+                <Grid container sx={{ color: 'white' }} alignItems={'center'}>
+                    <Grid
+                        item
+                        md={4}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}>
+                        <img
+                            width={'70%'}
+                            src={`https://image.tmdb.org/t/p/original/${detailData.poster_path}`}
+                            alt={detailData.title}
+                        />
                     </Grid>
-                </Container>
-            </Box>
+                    <Grid item md={8}>
+                        <Typography variant={'h4'} paragraph>
+                            {detailData.title}
+                        </Typography>
+                        <Typography paragraph>{detailData.overview}</Typography>
+                        <Typography>
+                            公開日；{detailData.release_date}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Container>
         </Box>
     )
 }
