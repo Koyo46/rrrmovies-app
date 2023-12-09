@@ -42,10 +42,11 @@ const Home = () => {
                 slidesPerView={5}
                 onSlideChange={() => console.log('slide change')}
                 onSwiper={swiper => console.log(swiper)}>
-                {movies.map(movie => (
+                {movies.map((movie, index) => (
                     <SwiperSlide>
                         <Link href={`detail/movie/${movie.id}`}>
                             <CardMedia
+                                key={index}
                                 component="img"
                                 sx={{ aspectRatio: 2 / 3 }}
                                 image={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
