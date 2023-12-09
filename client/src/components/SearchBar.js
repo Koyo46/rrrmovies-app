@@ -5,19 +5,19 @@ import Button from './Button'
 import { useRouter } from 'next/router'
 
 const SearchBar = () => {
-    const [search, setSearch] = useState('') // 検索ワードを管理するstate
+    const [query, setQuery] = useState('') // 検索ワードを管理するstate
     const router = useRouter()
 
     const handlechange = e => {
-        setSearch(e.target.value)
+        setQuery(e.target.value)
     }
     const searchQuery = e => {
         e.preventDefault()
-        if (!search.trim()) {
+        if (!query.trim()) {
             return
         }
         // alert(search)
-        router.push(`/search?query=${encodeURIComponent(search)}`)
+        router.push(`/search?query=${encodeURIComponent(query)}`)
     }
     return (
         <Box
