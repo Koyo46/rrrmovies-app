@@ -13,6 +13,9 @@ const SearchBar = () => {
     }
     const searchQuery = e => {
         e.preventDefault()
+        if (!search.trim()) {
+            return
+        }
         // alert(search)
         router.push(`/search?query=${encodeURIComponent(search)}`)
     }
