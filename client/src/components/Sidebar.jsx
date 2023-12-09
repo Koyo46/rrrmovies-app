@@ -1,7 +1,7 @@
 import { List, ListItemButton, ListItemText, Typography } from '@mui/material'
 import React from 'react'
 
-const Sidebar = () => {
+const Sidebar = ({ setCategory }) => {
     return (
         <>
             <Typography
@@ -14,13 +14,13 @@ const Sidebar = () => {
                 カテゴリ
             </Typography>
             <List component={'nav'}>
-                <ListItemButton>
+                <ListItemButton onClick={() => setCategory('all')}>
                     <ListItemText primary="全て" />
                 </ListItemButton>
-                <ListItemButton>
+                <ListItemButton onClick={() => setCategory('movie')}>
                     <ListItemText primary="映画" />
                 </ListItemButton>
-                <ListItemButton>
+                <ListItemButton onClick={() => setCategory('tv')}>
                     <ListItemText primary="TV" />
                 </ListItemButton>
             </List>

@@ -6,14 +6,16 @@ import { Grid } from '@mui/material'
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react'
 
 const search = () => {
-    const [searchResults, setSearchResults] = React.useState([])
+    const [category, setCategory] = useState('all')
+    const [searchResults, setSearchResults] = useState([])
     const router = useRouter()
     const { query: searchQuery } = router.query
-    console.log(searchQuery)
+    // console.log(searchQuery)
+    // console.log(category)
 
     useEffect(() => {
         if (!searchQuery) return
@@ -22,17 +24,17 @@ const search = () => {
                 const response = await axios.get(
                     `api/searchMedia?searchQuery=${searchQuery}`,
                 )
-                console.log(response.data)
+                // console.log(response.data)
                 const searchResults = response.data.results
-                console.log(searchResults)
+                // console.log(searchResults)
 
                 const validResults = searchResults.filter(
                     item =>
                         item.media_type === 'movie' || item.media_type === 'tv',
                 )
-                console.log(validResults)
+                // console.log(validResults)
                 setSearchResults(validResults)
-                console.log(searchResults)
+                // console.log(searchResults)
             } catch (error) {
                 console.log(error)
             }
@@ -40,6 +42,15 @@ const search = () => {
 
         fetchMedia()
     }, [searchQuery])
+
+    const filterdResults = searchResults.filter(result => {
+        if (category == 'all') {
+            return true
+        }
+        return result.media_type == category
+    })
+
+    console.log(filterdResults)
     return (
         <AppLayout
             header={
@@ -50,9 +61,9 @@ const search = () => {
             <Head>
                 <title>Laravel - Search</title>
             </Head>
-            <Layout sidebar={<Sidebar />}>
+            <Layout sidebar={<Sidebar setCategory={setCategory} />}>
                 <Grid container spacing={3}>
-                    <MediaCard />
+                    <MediaCard results={searchResults} />
                 </Grid>
             </Layout>
         </AppLayout>
