@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -15,10 +17,9 @@ class ReviewController extends Controller
         $reviews = Review::with('user')
             ->where('media_type', $media_type)
             ->where('media_id', $media_id)
-            ->orderBy('created_at', 'desc')
             ->get();
 
-        return response()->json([$reviews]);
+        return response()->json($reviews);
     }
 
     /**
@@ -34,7 +35,25 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->input("content");
+
+        $validatedData = $request->validate([
+            'content' => 'required|string|max:1000',
+            'rating' => 'required|integer|between:1,5',
+            'media_id' => 'required|integer',
+            'media_type' => 'required|string',
+        ]);
+
+        $review = Review::create([
+            'user_id' => Auth::id(),
+            'content' => $validatedData['content'],
+            'rating' => $validatedData['rating'],
+            'media_id' => $validatedData['media_id'],
+            'media_type' => $validatedData['media_type'],
+        ]);
+
+        $review->load('user');
+        return response()->json($review);
     }
 
     /**

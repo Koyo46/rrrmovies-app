@@ -23,6 +23,7 @@ const Detail = ({ detailData, media_type, media_id }) => {
     const [open, setOpen] = React.useState(false)
     const [rating, setRating] = React.useState(0)
     const [review, setReview] = React.useState('')
+    const [reviews, setReviews] = React.useState([])
 
     const handleOpen = () => setOpen(true)
 
@@ -35,16 +36,34 @@ const Detail = ({ detailData, media_type, media_id }) => {
     }
 
     const isDisabled = !rating || !review.trim()
+
+    const handleReviewSubmit = async () => {
+        setOpen(false)
+        try {
+            const response = await laravelAxios.post('api/reviews', {
+                content: review,
+                rating: rating,
+                media_type: media_type,
+                media_id: media_id,
+            })
+            const newReview = response.data
+            setReviews([...reviews, newReview])
+
+            setRating(0)
+            setReview('')
+        } catch {
+            console.log('error')
+        }
+    }
     useEffect(() => {
         const fetchReviews = async () => {
             try {
                 const response = await laravelAxios.get(
                     `api/reviews/${media_type}/${media_id}`,
                 )
-                console.log(response.data)
                 setReviews(response.data)
-            } catch {
-                console.log('error')
+            } catch (e) {
+                console.log(e)
             }
         }
 
@@ -131,7 +150,7 @@ const Detail = ({ detailData, media_type, media_id }) => {
             </Box>
 
             {/* レビュー内容 */}
-            {/* <Container sx={{ py: 4 }}>
+            <Container sx={{ py: 4 }}>
                 <Typography
                     component={'h1'}
                     variant={'h4'}
@@ -141,7 +160,7 @@ const Detail = ({ detailData, media_type, media_id }) => {
                 </Typography>
                 <Grid container spacing={3}>
                     {reviews.map(review => (
-                        <Grid item xs={12} md={6} lg={4} key={review.id}>
+                        <Grid item xs={12} key={review.id}>
                             <Card>
                                 <CardContent>
                                     <Typography
@@ -156,14 +175,14 @@ const Detail = ({ detailData, media_type, media_id }) => {
                                         variant={'body2'}
                                         color={'text.secondary'}
                                         component={'p'}>
-                                        {review.body}
+                                        {review.content}
                                     </Typography>
                                 </CardContent>
                             </Card>
                         </Grid>
                     ))}
                 </Grid>
-            </Container> */}
+            </Container>
 
             {/* レビュー追加ボタン */}
             <Box
@@ -213,7 +232,10 @@ const Detail = ({ detailData, media_type, media_id }) => {
                         value={review}
                     />
 
-                    <Button variant="outlined" disabled={isDisabled}>
+                    <Button
+                        variant="outlined"
+                        disabled={isDisabled}
+                        onClick={handleReviewSubmit}>
                         送信
                     </Button>
                 </Box>
