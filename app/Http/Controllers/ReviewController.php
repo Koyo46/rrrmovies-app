@@ -12,11 +12,6 @@ class ReviewController extends Controller
      */
     public function index($media_type, $media_id)
     {
-        // demoReviews
-        Review::factory()->count(5)->create([
-            'media_type' => $media_type,
-            'media_id' => $media_id,
-        ]);
         $reviews = Review::with('user')
             ->where('media_type', $media_type)
             ->where('media_id', $media_id)
