@@ -1,12 +1,36 @@
 import AppLayout from '@/components/Layouts/AppLayout'
-import { Box, Container, Grid, Typography } from '@mui/material'
+import laravelAxios from '@/lib/laravelAxios'
+import {
+    Box,
+    Card,
+    CardContent,
+    Container,
+    Grid,
+    Rating,
+    Typography,
+} from '@mui/material'
 import axios from 'axios'
 import Head from 'next/head'
-import React from 'react'
+import React, { useEffect } from 'react'
 
-const Detail = ({ detailData }) => {
-    console.log(detailData)
+const Detail = ({ detailData, media_type, media_id }) => {
+    const [reviews, setReviews] = React.useState([])
 
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await laravelAxios.get(
+                    `api/reviews/${media_type}/${media_id}`,
+                )
+                console.log(response.data)
+                setReviews(response.data)
+            } catch {
+                console.log('error')
+            }
+        }
+
+        fetchReviews()
+    }, [media_type, media_id])
     return (
         <AppLayout
             header={
@@ -86,6 +110,41 @@ const Detail = ({ detailData }) => {
                     </Grid>
                 </Container>
             </Box>
+
+            {/* レビュー内容 */}
+            <Container sx={{ py: 4 }}>
+                <Typography
+                    component={'h1'}
+                    variant={'h4'}
+                    align="center"
+                    gutterBottom>
+                    レビュー一覧
+                </Typography>
+                <Grid container spacing={3}>
+                    {reviews.map(review => (
+                        <Grid item xs={12} md={6} lg={4} key={review.id}>
+                            <Card>
+                                <CardContent>
+                                    {/* <Typography
+                                        variant={'h5'}
+                                        component={'div'}
+                                        gutterBottom>
+                                        {review.user.name}
+                                    </Typography> */}
+                                    <Rating value={review.rating} readOnly />
+
+                                    <Typography
+                                        variant={'body2'}
+                                        color={'text.secondary'}
+                                        component={'p'}>
+                                        {review.body}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Container>
         </AppLayout>
     )
 }
@@ -109,6 +168,8 @@ export async function getServerSideProps(context) {
         return {
             props: {
                 detailData: combinedData,
+                media_type,
+                media_id,
             },
         }
     } catch {
