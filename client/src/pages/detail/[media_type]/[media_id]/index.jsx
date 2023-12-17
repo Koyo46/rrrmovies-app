@@ -21,10 +21,20 @@ import AddIcon from '@mui/icons-material/Add'
 
 const Detail = ({ detailData, media_type, media_id }) => {
     const [open, setOpen] = React.useState(false)
-    const [reviews, setReviews] = React.useState([])
+    const [rating, setRating] = React.useState(0)
+    const [review, setReview] = React.useState('')
 
     const handleOpen = () => setOpen(true)
 
+    const handleReviewChange = e => {
+        setReview(e.target.value)
+    }
+
+    const handleRatingChange = (e, newValue) => {
+        setRating(newValue)
+    }
+
+    const isDisabled = !rating || !review.trim()
     useEffect(() => {
         const fetchReviews = async () => {
             try {
@@ -121,7 +131,7 @@ const Detail = ({ detailData, media_type, media_id }) => {
             </Box>
 
             {/* レビュー内容 */}
-            <Container sx={{ py: 4 }}>
+            {/* <Container sx={{ py: 4 }}>
                 <Typography
                     component={'h1'}
                     variant={'h4'}
@@ -134,12 +144,12 @@ const Detail = ({ detailData, media_type, media_id }) => {
                         <Grid item xs={12} md={6} lg={4} key={review.id}>
                             <Card>
                                 <CardContent>
-                                    {/* <Typography
+                                    <Typography
                                         variant={'h5'}
                                         component={'div'}
                                         gutterBottom>
                                         {review.user.name}
-                                    </Typography> */}
+                                    </Typography>
                                     <Rating value={review.rating} readOnly />
 
                                     <Typography
@@ -153,7 +163,7 @@ const Detail = ({ detailData, media_type, media_id }) => {
                         </Grid>
                     ))}
                 </Grid>
-            </Container>
+            </Container> */}
 
             {/* レビュー追加ボタン */}
             <Box
@@ -189,16 +199,23 @@ const Detail = ({ detailData, media_type, media_id }) => {
                     <Typography variant="h6" component="h2">
                         レビューを書く
                     </Typography>
-
-                    <Rating required />
+                    <Rating
+                        required
+                        onChange={handleRatingChange}
+                        value={rating}
+                    />
                     <TextareaAutosize
                         required
                         minRows={5}
                         placeholder="レビューを書く"
                         style={{ width: '100%', marginTop: '16px' }}
+                        onChange={handleReviewChange}
+                        value={review}
                     />
 
-                    <Button variant="outlined">送信</Button>
+                    <Button variant="outlined" disabled={isDisabled}>
+                        送信
+                    </Button>
                 </Box>
             </Modal>
         </AppLayout>
